@@ -61,12 +61,33 @@ function renderHero() {
 function renderStats() {
   const statsEl = document.getElementById("heroStats");
   if (!statsEl) return;
-  statsEl.innerHTML = D.hero.stats.map((s, i) => `
-    <div class="stat-card rounded-3xl p-6 text-center reveal-up">
-      <div class="font-display text-4xl text-gradient" data-counter data-target="${s.value}" data-suffix="${s.suffix}">0${s.suffix}</div>
-      <div class="mt-1 text-xs uppercase tracking-widest text-white/40 font-mono">${s.label}</div>
-    </div>
-  `).join("");
+  statsEl.innerHTML = D.hero.stats.map((s, i) => {
+    if (s.label === "Certifications") {
+      return `
+      <a href="recognition.html" class="stat-card group relative block rounded-3xl p-6 text-center reveal-up">
+        <!-- Glass Reflection -->
+        <div class="absolute inset-0 bg-gradient-to-b from-white/[0.15] to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 blur-md pointer-events-none rounded-3xl transform translate-y-4 group-hover:translate-y-0"></div>
+        <div class="absolute top-0 left-0 right-0 h-1/2 bg-gradient-to-b from-white/10 to-transparent opacity-0 group-hover:opacity-50 rounded-t-3xl pointer-events-none transition-opacity duration-500"></div>
+        
+        <!-- Tooltip -->
+        <div class="absolute -top-10 left-1/2 -translate-x-1/2 bg-white text-black px-3 py-1.5 rounded-full text-[10px] font-mono tracking-widest uppercase whitespace-nowrap opacity-0 group-hover:opacity-100 transition-all duration-300 transform translate-y-2 group-hover:-translate-y-1 z-20 pointer-events-none shadow-lg">
+          View Wall
+          <!-- little arrow -->
+          <div class="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-white rotate-45"></div>
+        </div>
+
+        <div class="font-display text-4xl text-gradient relative z-10" data-counter data-target="${s.value}" data-suffix="${s.suffix}">0${s.suffix}</div>
+        <div class="mt-1 text-xs uppercase tracking-widest text-white/40 font-mono relative z-10">${s.label}</div>
+      </a>
+      `;
+    }
+    return `
+      <div class="stat-card rounded-3xl p-6 text-center reveal-up">
+        <div class="font-display text-4xl text-gradient" data-counter data-target="${s.value}" data-suffix="${s.suffix}">0${s.suffix}</div>
+        <div class="mt-1 text-xs uppercase tracking-widest text-white/40 font-mono">${s.label}</div>
+      </div>
+    `;
+  }).join("");
 }
 
 function renderAbout() {
