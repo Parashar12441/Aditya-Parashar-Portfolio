@@ -1998,7 +1998,7 @@ function initMatterPhysics() {
     ropeHandle.style.top = `${lastBody.position.y}px`;
 
     // Toggle logic
-    if (lastBody.position.y > 380 && !hasTriggered) {
+    if (lastBody.position.y > 260 && !hasTriggered) {
       hasTriggered = true;
       toggleTheme();
 
@@ -2007,7 +2007,7 @@ function initMatterPhysics() {
         { backgroundColor: 'rgb(var(--color-white))', boxShadow: '0 0 20px rgb(var(--color-white))' },
         { backgroundColor: '', boxShadow: '', duration: 0.4 }
       );
-    } else if (lastBody.position.y < 320) {
+    } else if (lastBody.position.y < 220) {
       hasTriggered = false;
     }
   });
