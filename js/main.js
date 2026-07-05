@@ -151,7 +151,7 @@ function renderProjects() {
 
   projEl.innerHTML = projectsData.map((p, i) => {
     return `
-        <div onclick="openImmersiveProject('${p.id}')" class="project-list-item group relative p-8 md:p-12 glass rounded-3xl border border-white/5 cursor-pointer overflow-hidden transition-all hover:bg-white/5" data-reveal style="transition-delay: ${i * 0.05}s">
+        <div onclick="openImmersiveProject('${p.id}')" onkeydown="if(event.key==='Enter'||event.key===' ')this.click()" tabindex="0" role="button" aria-label="Open ${p.title} project" class="project-list-item group relative p-8 md:p-12 glass rounded-3xl border border-white/5 cursor-pointer overflow-hidden transition-all hover:bg-white/5 focus-visible:ring-2 focus-visible:ring-accent-emerald focus-visible:outline-none" data-reveal style="transition-delay: ${i * 0.05}s">
           <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
             <div>
               <p class="font-mono text-xs text-accent-${p.accent} mb-3 transition-transform duration-500 ease-out group-hover:translate-x-3">${p.period} — ${p.category}</p>
@@ -195,7 +195,7 @@ window.openImmersiveProject = function (projectId) {
           <div id="immersiveMedia" class="w-full h-full rounded-3xl overflow-hidden relative shadow-2xl border border-white/10 bg-white/5" style="opacity: 0; transform: translateY(40px) scale(0.95);">
             ${project.media.video ?
         `<video src="${project.media.video}" autoplay loop muted playsinline class="w-full h-full object-cover"></video>` :
-        `<img src="${project.media.image}" class="w-full h-full object-cover" />`
+        `<img src="${project.media.image}" class="w-full h-full object-cover" loading="lazy" />`
       }
           </div>
         </div>
@@ -328,7 +328,7 @@ function renderEvents() {
     const roleIcon = isWinner ? '<i data-lucide=\'trophy\' class=\'w-3 h-3\'></i> ' : '';
 
     return `
-      <div onclick="openImmersiveEvent('${e.id}')" class="block group glass rounded-3xl p-6 transition-all cursor-pointer ${cardStyle}" data-reveal style="transition-delay: ${i * 0.05}s">
+      <div onclick="openImmersiveEvent('${e.id}')" onkeydown="if(event.key==='Enter'||event.key===' ')this.click()" tabindex="0" role="button" aria-label="Open ${e.title} event" class="block group glass rounded-3xl p-6 transition-all cursor-pointer ${cardStyle} focus-visible:ring-2 focus-visible:ring-accent-blue focus-visible:outline-none" data-reveal style="transition-delay: ${i * 0.05}s">
         <div class="flex flex-wrap items-center justify-between gap-4 mb-3">
           <span class="text-xs font-mono ${isWinner ? 'text-yellow-500/80 border-yellow-500/30 bg-yellow-500/5' : 'text-white/40 border-white/10'} border rounded-full px-2.5 py-1 flex items-center gap-1.5">${isWinner ? '<i data-lucide="award" class="w-3 h-3"></i>' : ''}${e.type}</span>
           <span class="text-xs font-mono text-white/40 flex items-center gap-2"><i data-lucide="map-pin" class="w-3.5 h-3.5"></i> ${e.location || 'Remote'}</span>
@@ -368,14 +368,14 @@ window.openImmersiveEvent = function (eventId) {
           <div id="gallery-track" class="absolute inset-0 flex overflow-x-auto snap-x snap-mandatory hide-scrollbar" style="scroll-behavior: smooth;">
             ${mediaArray.map(img => `
             <div class="w-full h-full shrink-0 snap-center relative p-4">
-              <img src="${img}" class="absolute inset-0 w-full h-full object-contain p-4" />
+              <img src="${img}" class="absolute inset-0 w-full h-full object-contain p-4" loading="lazy" />
             </div>
             `).join('')}
           </div>
           
           ${mediaArray.length > 1 ? `
           <div id="gallery-dots" class="auto-slide-container absolute bottom-4 left-0 right-0 flex justify-center gap-3 z-20 pointer-events-auto opacity-100 transition-opacity duration-300">
-             ${mediaArray.map((_, i) => `<div class="auto-slide-link w-2 h-2 rounded-full bg-white/30 cursor-pointer ${i === 0 ? 'is-active' : ''}" onclick="document.getElementById('gallery-track').scrollTo({left: document.getElementById('gallery-track').clientWidth * ${i}, behavior: 'smooth'})"></div>`).join('')}
+             ${mediaArray.map((_, i) => `<button type="button" aria-label="Go to slide ${i+1}" class="auto-slide-link w-2 h-2 rounded-full bg-white/30 cursor-pointer ${i === 0 ? 'is-active' : ''} focus-visible:ring-2 focus-visible:ring-white focus-visible:outline-none" onclick="document.getElementById('gallery-track').scrollTo({left: document.getElementById('gallery-track').clientWidth * ${i}, behavior: 'smooth'})"></button>`).join('')}
           </div>
           <div class="absolute top-4 left-4 z-20 pointer-events-none bg-black/40 backdrop-blur-md text-white/80 text-[10px] font-mono px-2 py-1 rounded-md border border-white/10 opacity-100 transition-opacity duration-300">
             SWIPE TO EXPLORE
@@ -604,7 +604,7 @@ async function renderGithubWidgets() {
           <svg class="w-3.5 h-3.5" role="img" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" fill="currentColor"><path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/></svg> GitHub
         </div>
         <div class="flex items-start gap-4 mb-6">
-          <img src="${data.avatar_url}" alt="${data.login}" class="w-16 h-16 rounded-full border border-white/10" />
+          <img src="${data.avatar_url}" alt="${data.login}" class="w-16 h-16 rounded-full border border-white/10" loading="lazy" />
           <div>
             <h3 class="font-display text-xl text-white/90">${data.name || data.login}</h3>
             <a href="${data.html_url}" target="_blank" rel="noopener noreferrer" class="text-sm font-mono text-white/40 hover:text-accent-blue transition-colors">@${data.login}</a>
@@ -652,7 +652,7 @@ async function renderGithubWidgets() {
         
         <div class="flex justify-center mt-8 mb-2">
           <a href="https://git.io/streak-stats" target="_blank" rel="noopener noreferrer">
-            <img src="https://github-readme-streak-stats.herokuapp.com?user=Parashar12441&theme=dark&hide_border=true" alt="GitHub Streak" class="w-full max-w-[500px] transition-transform hover:scale-[1.02] filter hover:brightness-110" />
+            <img src="https://github-readme-streak-stats.herokuapp.com?user=Parashar12441&theme=dark&hide_border=true" alt="GitHub Streak" class="w-full max-w-[500px] transition-transform hover:scale-[1.02] filter hover:brightness-110" loading="lazy" />
           </a>
         </div>
         
@@ -1861,6 +1861,15 @@ async function initLiveCounter() {
    ============================================================ */
 
 document.addEventListener("DOMContentLoaded", () => {
+  // GSAP 60 FPS Hardware Acceleration & A11y
+  if (window.gsap) {
+    gsap.defaults({ force3D: true });
+    let mm = gsap.matchMedia();
+    mm.add("(prefers-reduced-motion: reduce)", () => {
+      gsap.globalTimeline.timeScale(100);
+    });
+  }
+
   renderAll();
   initPreloader();
   initCursor();

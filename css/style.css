@@ -1044,3 +1044,35 @@ details.group\/accordion[open] > div {
   display: none;
 }
 
+/* ============================================================
+   PERFORMANCE & 60 FPS OPTIMIZATIONS
+   ============================================================ */
+.glass-card, .stat-card, .reveal-up, [data-reveal] {
+  will-change: transform, opacity;
+  transform-style: preserve-3d;
+  backface-visibility: hidden;
+}
+
+#custom-cursor, #cursor-glow {
+  will-change: transform, opacity, left, top;
+}
+
+/* ============================================================
+   REDUCED MOTION (A11Y)
+   ============================================================ */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .reveal-up, [data-reveal] {
+    opacity: 1 !important;
+    transform: none !important;
+  }
+  #custom-cursor, #cursor-glow {
+    display: none !important;
+  }
+}
+
