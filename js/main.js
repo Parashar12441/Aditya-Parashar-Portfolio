@@ -115,29 +115,37 @@ function renderTimeline() {
 const ACCENT_ICON = { blue: "radar", emerald: "cpu", purple: "hotel", gold: "train-front" };
 
 function renderProjects() {
-  const projEl = document.getElementById("projectsGrid");
-  if (!projEl) return;
+    const projEl = document.getElementById("projectsGrid");
+    if (!projEl) return;
+    
+    // Remove the grid classes to allow a vertical list
+    projEl.classList.remove("grid", "md:grid-cols-2");
+    // Ensure it's a flex column with gap for spacing the cards
+    projEl.classList.add("flex", "flex-col", "gap-6");
+    
+    let projectsData = D.projects;
+    if (projEl.classList.contains('home-truncate-projects')) {
+      projectsData = projectsData.slice(0, 2);
+    }
   
-  // Remove the grid classes to allow a vertical list
-  projEl.classList.remove("grid", "md:grid-cols-2", "gap-6");
-  projEl.classList.add("flex", "flex-col");
-
-  projEl.innerHTML = D.projects.map(p => `
-    <div class="project-list-item group relative py-8 md:py-12 border-b border-white/5 cursor-pointer" onclick="openImmersiveProject('${p.id}')">
-      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
-        <div class="relative z-10">
-          <p class="font-mono text-xs text-accent-${p.accent} mb-3 transition-transform duration-500 ease-out group-hover:translate-x-3">${p.period} — ${p.category}</p>
-          <h3 class="font-display text-5xl md:text-7xl lg:text-8xl text-white/30 group-hover:text-white transition-all duration-500 ease-out group-hover:translate-x-6 tracking-tight">${p.title}</h3>
+    projEl.innerHTML = projectsData.map((p, i) => {
+      return `
+        <div onclick="openImmersiveProject('${p.id}')" class="project-list-item group relative p-8 md:p-12 glass rounded-3xl border border-white/5 cursor-pointer overflow-hidden transition-all hover:bg-white/5" data-reveal style="transition-delay: ${i * 0.05}s">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 relative z-10">
+            <div>
+              <p class="font-mono text-xs text-accent-${p.accent} mb-3 transition-transform duration-500 ease-out group-hover:translate-x-3">${p.period} — ${p.category}</p>
+              <h3 class="font-display text-5xl md:text-7xl lg:text-8xl text-white/30 group-hover:text-white transition-all duration-500 ease-out group-hover:translate-x-6 tracking-tight">${p.title}</h3>
+            </div>
+            <div class="opacity-0 group-hover:opacity-100 transition-all duration-500 ease-out -translate-x-8 group-hover:translate-x-0 flex items-center gap-3 text-white/60">
+              <span class="font-mono text-sm tracking-widest uppercase">View Project</span>
+              <i data-lucide="arrow-right" class="w-6 h-6"></i>
+            </div>
+          </div>
+          <!-- Hover Background Glow -->
+          <div class="absolute inset-0 bg-gradient-to-r from-accent-${p.accent}/0 via-accent-${p.accent}/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
         </div>
-        <div class="opacity-0 group-hover:opacity-100 transition-all duration-500 ease-out -translate-x-8 group-hover:translate-x-0 flex items-center gap-3 text-white/60 relative z-10">
-          <span class="font-mono text-sm tracking-widest uppercase">View Project</span>
-          <i data-lucide="arrow-right" class="w-6 h-6"></i>
-        </div>
-      </div>
-      <!-- Hover Background Glow -->
-      <div class="absolute inset-0 bg-gradient-to-r from-accent-${p.accent}/0 via-accent-${p.accent}/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none"></div>
-    </div>
-  `).join("");
+      `;
+    }).join("");
 }
 
 window.openImmersiveProject = function(projectId) {
@@ -287,7 +295,12 @@ function renderEvents() {
   const eventsEl = document.getElementById('eventsGrid') || document.getElementById('eventsList');
   if (!eventsEl) return;
   
-  eventsEl.innerHTML = D.events.map((e, i) => {
+  let eventsData = D.events;
+  if (eventsEl.classList.contains('home-truncate-events')) {
+    eventsData = eventsData.slice(0, 2);
+  }
+  
+  eventsEl.innerHTML = eventsData.map((e, i) => {
     const isWinner = e.role && (e.role.toLowerCase().includes('winner') || e.role.toLowerCase().includes('first'));
     const cardStyle = isWinner ? 'border border-yellow-500/30 shadow-[0_0_15px_rgba(234,179,8,0.1)] hover:shadow-[0_0_25px_rgba(234,179,8,0.2)]' : 'border border-white/5 hover:bg-white/10';
     const roleStyle = isWinner ? 'text-yellow-400 bg-yellow-400/10 border border-yellow-400/20 px-2 py-0.5 rounded text-[10px]' : 'text-accent-blue';

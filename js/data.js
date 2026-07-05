@@ -207,7 +207,7 @@ const PORTFOLIO_DATA = {
     stats: [
       { value: 4, suffix: "", label: "Shipped builds" },
       { value: 3, suffix: "", label: "Dev programs" },
-      { value: 7, suffix: "", label: "Certifications" },
+      { value: 11, suffix: "+", label: "Certifications" },
       { value: 2029, suffix: "", label: "Graduating" },
     ],
   },
