@@ -2013,6 +2013,20 @@ function initMatterPhysics() {
   });
 
   Runner.run(Runner.create(), engine);
+  
+  // Gyroscope tilt support for mobile
+  if (window.DeviceOrientationEvent) {
+    window.addEventListener('deviceorientation', function(event) {
+      if (!engine || !engine.world) return;
+      const gamma = event.gamma; // left-to-right tilt in degrees
+      if (gamma !== null) {
+        let gravityX = gamma / 20; // Adjust sensitivity
+        if (gravityX > 1.8) gravityX = 1.8;
+        if (gravityX < -1.8) gravityX = -1.8;
+        engine.world.gravity.x = gravityX;
+      }
+    });
+  }
 
   // Mouse interaction mapping
   let dragConstraint = null;
