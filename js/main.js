@@ -1956,7 +1956,7 @@ function initMatterPhysics() {
   });
 
   const lastBody = rope.bodies[rope.bodies.length - 1];
-  Matter.Body.setDensity(lastBody, 0.4); // Reduced weight so it doesn't snap down as forcefully
+  Matter.Body.setDensity(lastBody, 4.0); // Make the bob very heavy so it aggressively pulls the rope toward gravity
 
   // Anchor the top of the rope to the ceiling
   const anchor = Constraint.create({
@@ -2030,21 +2030,31 @@ function initMatterPhysics() {
     window.addEventListener('deviceorientation', function(event) {
       if (!engine || !engine.world) return;
       
-      let tilt = 0;
+      let tiltX = 0;
+      let tiltY = 0;
       // Handle orientation changes (portrait vs landscape)
       if (window.orientation === 90) {
-        tilt = event.beta;
+        tiltX = event.beta;
+        tiltY = -event.gamma;
       } else if (window.orientation === -90) {
-        tilt = -event.beta;
+        tiltX = -event.beta;
+        tiltY = event.gamma;
       } else {
-        tilt = event.gamma;
+        tiltX = event.gamma;
+        tiltY = event.beta; // Beta is typically ~90 when held vertically
       }
 
-      if (tilt !== null && tilt !== undefined) {
-        let gravityX = tilt / 12; // High sensitivity for dramatic swing
-        if (gravityX > 3.0) gravityX = 3.0;
-        if (gravityX < -3.0) gravityX = -3.0;
+      if (tiltX !== null && tiltY !== null) {
+        // High sensitivity for dramatic swing.
+        let gravityX = tiltX / 12; 
+        let gravityY = tiltY / 30; // 90 degrees / 30 = 3.0 standard downward gravity
+        
+        // Clamp to prevent breaking physics
+        gravityX = Math.max(-4.0, Math.min(4.0, gravityX));
+        gravityY = Math.max(-4.0, Math.min(4.0, gravityY));
+
         engine.world.gravity.x = gravityX;
+        engine.world.gravity.y = gravityY;
         
         // Wake up sleeping bodies just in case
         if (Matter.Composite && Matter.Body) {
